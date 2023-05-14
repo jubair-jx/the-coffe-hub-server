@@ -3,7 +3,7 @@ const app = express();
 require("dotenv").config();
 const PORT = process.env.PORT || 4000;
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 //middleware
 app.use(cors());
@@ -36,7 +36,12 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
-
+    app.delete("/coffe/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await coffeCollection.deleteOne(query);
+      res.send(result);
+    });
     app.post("/coffe", async (req, res) => {
       const data = req.body;
       console.log(data);
